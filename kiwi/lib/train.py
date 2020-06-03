@@ -197,12 +197,14 @@ def run(ModelClass, output_dir, pipeline_options, model_options):
         batch_size=pipeline_options.train_batch_size,
         is_train=True,
         device=device_id,
+        lazy=True
     )
     valid_iter = build_bucket_iterator(
         datasets[1],
         batch_size=pipeline_options.valid_batch_size,
         is_train=False,
         device=device_id,
+        lazy=True
     )
 
     trainer.run(train_iter, valid_iter, epochs=pipeline_options.epochs)
