@@ -54,19 +54,24 @@ class KiwiDataset(data.Dataset):
 
         self.fields = OrderedDict(fields)
         self.paths = paths
-        self.readers = readers
+        if readers is None:
+            self.readers = [None for _ in self.fields]
+        else:
+            self.readers = readers
+        
         if isinstance(fields, dict):
             if not isinstance(paths, dict):
                 raise TypeError('fields and paths must both be lists or dicts')
             self.paths = [paths[name] for name in self.fields]
-            if not isinstance(readers, dict):
-                raise TypeError('paths and readers must both be lists or dicts')
-            self.readers = [readers.get(name) for name in self.fields]
+            if readers is not None:
+                if not isinstance(readers, dict):
+                    raise TypeError('paths and readers must both be lists or dicts')
+                self.readers = [readers.get(name) for name in self.fields]
 
         self.distinct_fields = OrderedDict()
         for idx, (name, field) in enumerate(self.fields.items()):
-            if id(field) not in self.distinct_fields:
-                self.distinct_fields[id(field)] = {
+            if id(name) not in self.distinct_fields:
+                self.distinct_fields[id(name)] = {
                     'names': [name],
                     'idx': [idx],
                     'field': field,

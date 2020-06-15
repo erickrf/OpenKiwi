@@ -141,6 +141,10 @@ def vocab_loaded_if_needed(field):
     return not field.use_vocab or (hasattr(field, const.VOCAB) and field.vocab)
 
 
+def needs_vocabulary(field):
+    return field.use_vocab and getattr(field, 'vocab', None) is None
+
+
 def save_vocabularies_from_datasets(directory, *datasets):
     fields = {}
     for dataset in datasets:

@@ -85,6 +85,7 @@ class Trainer:
 
     def train_epoch(self, train_iterator, valid_iterator):
         self.model.train()
+        train_iterator.dataset.inspect()
         for batch in tqdm(
             train_iterator,
             total=len(train_iterator),

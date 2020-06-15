@@ -21,7 +21,7 @@ from pathlib import Path
 from kiwi.data.corpus import Corpus
 from kiwi.data.fieldsets import extend_vocabs_fieldset
 from kiwi.data.fieldsets.fieldset import Fieldset
-from kiwi.data.qe_dataset import QEDataset
+from kiwi.data.dataset import KiwiDataset
 from kiwi.data.utils import (
     build_vocabulary,
     filter_len,
@@ -31,9 +31,13 @@ from kiwi.data.utils import (
 
 def build_dataset(fieldset, prefix='', filter_pred=None, **kwargs):
     fields, files = fieldset.fields_and_files(prefix, **kwargs)
-    examples = Corpus.from_files(fields=fields, files=files)
-    dataset = QEDataset(
-        examples=examples, fields=fields, filter_pred=filter_pred
+    paths = {}
+    readers = {}
+    for name in fields:
+        readers[name] = files[name]['reader']
+        paths[name] = files[name]['name']
+    dataset = KiwiDataset(
+        fields, paths, readers, filter_pred=filter_pred
     )
     return dataset
 
